@@ -9,14 +9,34 @@
 import Foundation
 import Network
 
+class Measure {
+    let startTime: CFAbsoluteTime
+    
+    init() {
+        self.startTime = CFAbsoluteTimeGetCurrent()
+    }
+    
+    func end() {
+        let delay = CFAbsoluteTimeGetCurrent() - startTime
+        let ms = delay * 1000
+        
+        if delay < 1.0 {
+            print("Delay \(ms) ms")
+        }
+        else {
+            print("Delay \(delay) sec")
+        }
+    }
+}
+
 class UDPClient {
     var connection: NWConnection
     var queue: DispatchQueue
     
-    init() {
+    init(_ ip: String) {
         queue = DispatchQueue(label: "UDP Client Queue")
 
-        let host = NWEndpoint.Host.ipv4(IPv4Address("192.168.1.6")!)
+        let host = NWEndpoint.Host.ipv4(IPv4Address(ip)!)
         let port = NWEndpoint.Port(rawValue: 5000)!
         //let node: NWEndpoint = NWEndpoint(.v4("localhost"))
         connection = NWConnection(to: .hostPort(host: host, port: port), using: .udp)
@@ -33,11 +53,29 @@ class UDPClient {
         connection.start(queue: queue)
     }
     
-    func send(_ number: UInt16) {
-        let message = number == 0 ? "getLast" : String(number)
-        let data = message.data(using: .ascii)
+    func send(_ packetCounter: inout UInt16) {
+        print(">>>>>>>>>")
         
-        print("Sending", data!)
+        func updateCounterWithData(_ data: Data) {
+            let number = UInt16(littleEndian: data.withUnsafeBytes { $0.pointee })
+            print("Get: UInt (\(number))")
+            
+            if packetCounter != number && number > 0 {
+                packetCounter = number
+            }
+        }
+        
+        let data: Data?
+        
+        if packetCounter == 0 {
+            data = "getLast".data(using: .ascii)
+        }
+        else {
+            data = Data(bytes: &packetCounter, count: 2)
+        }
+        
+        print("Sending", data!, "UInt (\(packetCounter))")
+        let measure = Measure()
         
         connection.send(content: data, completion: .contentProcessed({
                 (error) in
@@ -47,17 +85,15 @@ class UDPClient {
             })
         )
         
-        connection.receive(minimumIncompleteLength: 4, maximumLength: 1024, completion: {
+        connection.receive(minimumIncompleteLength: 2, maximumLength: 1024, completion: {
             (data, context, isComplete, error) in
             if data != nil {
                 print("Received!", data ?? "Empty content")
                 
-                // print(String(bytes: data!, encoding: .ascii)!)
-
-                //let array = [UInt8](data!)
-                let array = UInt16(bigEndian: data!.withUnsafeBytes { $0.pointee })
+                updateCounterWithData(data!)
                 
-                print(array)
+                measure.end()
+                print()
             }
         })
         print("Sent...")

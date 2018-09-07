@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         print("init coder style")
         
-        self.client = UDPClient()
+        self.client = UDPClient("192.168.1.5")
         self.packetCounter = 0
         
         super.init(coder: aDecoder)
@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func pressed() {
-        self.client.send(self.packetCounter)
+        self.client.send(&self.packetCounter)
         
         self.packetCounter += 1
     }
