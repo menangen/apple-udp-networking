@@ -12,6 +12,7 @@
 		0D07A5C32136869200813C8C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C12136869200813C8C /* Main.storyboard */; };
 		0D07A5C52136869300813C8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C42136869300813C8C /* Assets.xcassets */; };
 		0D07A5C82136869300813C8C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C62136869300813C8C /* LaunchScreen.storyboard */; };
+		0DFBF8A12139C481004112B9 /* UDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFBF8A02139C481004112B9 /* UDPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		0D07A5C42136869300813C8C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D07A5C72136869300813C8C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0D07A5C92136869300813C8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0DFBF8A02139C481004112B9 /* UDPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				0D07A5BD2136869200813C8C /* AppDelegate.swift */,
 				0D07A5BF2136869200813C8C /* ViewController.swift */,
+				0DFBF8A02139C481004112B9 /* UDPClient.swift */,
 				0D07A5C12136869200813C8C /* Main.storyboard */,
 				0D07A5C42136869300813C8C /* Assets.xcassets */,
 				0D07A5C62136869300813C8C /* LaunchScreen.storyboard */,
@@ -135,6 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DFBF8A12139C481004112B9 /* UDPClient.swift in Sources */,
 				0D07A5C02136869200813C8C /* ViewController.swift in Sources */,
 				0D07A5BE2136869200813C8C /* AppDelegate.swift in Sources */,
 			);
@@ -195,7 +199,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -256,7 +260,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -271,6 +275,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -281,7 +286,6 @@
 		0D07A5CD2136869300813C8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = NetworkUDP/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -291,14 +295,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = menangen.NetworkUDP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		0D07A5CE2136869300813C8C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = NetworkUDP/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -308,7 +311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = menangen.NetworkUDP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
