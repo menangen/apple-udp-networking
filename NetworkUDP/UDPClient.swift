@@ -61,7 +61,7 @@ class UDPClient {
             print("Get: UInt (\(number))")
             
             if packetCounter != number && number > 0 {
-                packetCounter = number
+                packetCounter = number + 1
             }
         }
         

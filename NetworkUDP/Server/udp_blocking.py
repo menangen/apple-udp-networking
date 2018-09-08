@@ -44,11 +44,10 @@ class UDPServer:
             Network.log_level_1("incoming_number", incoming_number)
 
             if incoming_number:
-                if self.counterPacket == incoming_number:
 
-                    Network.save_packet_id(incoming_number)
+                Network.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
 
-                self.counterPacket += 1
+            self.counterPacket += 1
 
         # sleep(0.05)  # 50 ms sleep
 

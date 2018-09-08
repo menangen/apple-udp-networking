@@ -40,6 +40,10 @@ class Network:
         cls.log(">>>>>>>")
 
     @classmethod
-    def save_packet_id(cls, id):
+    def save_packet_id(cls, packet_id, normal = False):
         cls.DEBUG_SAVE = True
-        cls.log("\t..oo00\t[ Saving #{} ]\t00oo..".format(id))
+
+        template = "\t..oo00\t[ Saving #{} ]\t00oo.." if normal else "\t!!!\t[ ErrorSaving #{} ]\t!!!"
+
+        record = template.format(packet_id)
+        cls.log(record)
