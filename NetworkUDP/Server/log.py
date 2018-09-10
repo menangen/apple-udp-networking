@@ -9,7 +9,11 @@ class Log:
     DEBUG_SAVE = False
 
     verboselogs.install()
-
+    logging.basicConfig(
+        format='%(levelname)s:    %(message)s',
+        filename='/Volumes/RAMDisk/udp.log',
+        level=logging.DEBUG
+    )
     Logger = logging.getLogger(__name__)
 
     coloredlogs.install(
@@ -19,10 +23,10 @@ class Log:
         isatty=True,
         datefmt='%H:%M:%S %d %B',
         level_styles={
-            'critical': {'color': 'red', 'bold': True}, 'debug': {'color': 'white'},
+            'critical': {'color': 'red', 'bold': True}, 'debug': {'color': 'blue'},
             'error': {'color': 'red'}, 'info': {}, 'notice': {'color': 'magenta'},
             'spam': {'color': 'green', 'faint': True}, 'success': {'color': 'green', 'bold': True},
-            'verbose': {'color': 'blue'}, 'warning': {'color': 'yellow'}},
+            'verbose': {'color': 'white'}, 'warning': {'color': 'yellow'}},
         fmt="%(asctime)s[%(levelname)s] %(message)s \t",
         field_styles={
             'asctime': {'color': 'yellow'},
@@ -45,7 +49,7 @@ class Log:
 
     @classmethod
     def variable(cls, template: str, object_to_log, level=0):
-        cls.Logger.debug(
+        cls.Logger.verbose(
             f"\t({object_to_log})\t >>\t{template}"
             if level else
             f"{template} = {object_to_log}"
@@ -57,20 +61,17 @@ class Log:
 
     @classmethod
     def receiving_integer(cls, data: bytearray, addr: tuple):
-        tabs_tmpl = "_________________\n"
-        cls.Logger.debug(f"{tabs_tmpl}Received message: {data}, from {addr}")
+        cls.Logger.verbose("_________________")
+        cls.Logger.debug(f"Received message: {data}, from {addr}")
 
     @classmethod
     def request_end(cls):
-        cls.Logger.debug(">>>>>>>")
+        cls.Logger.verbose(">>>>>>>\n")
 
     @classmethod
     def save_packet_id(cls, packet_id, normal=False):
-        cls.DEBUG_SAVE = True
-
         tabs_tmpl = "\t\t"
-        cls.Logger.verbose(
-            f"{tabs_tmpl}[ Saving #{packet_id} ]"
-            if normal else
-            f"[ (!!) ErrorSaving #{packet_id} ]"
-        )
+        if normal:
+            cls.Logger.success(f"{tabs_tmpl}[ Saving #{packet_id} ]")
+        else:
+            cls.Logger.critical(f"[ (!!) ErrorSaving #{packet_id} ]")
