@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         print("init coder style")
         
-        self.client = UDPClient("192.168.1.5")
+        self.client = UDPClient("192.168.1.5", 54321)
         self.packetCounter = 0
         
         super.init(coder: aDecoder)

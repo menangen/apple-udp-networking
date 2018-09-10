@@ -33,11 +33,11 @@ class UDPClient {
     var connection: NWConnection
     var queue: DispatchQueue
     
-    init(_ ip: String) {
+    init(_ ip: String, _ port: UInt16 = 5000) {
         queue = DispatchQueue(label: "UDP Client Queue")
 
         let host = NWEndpoint.Host.ipv4(IPv4Address(ip)!)
-        let port = NWEndpoint.Port(rawValue: 5000)!
+        let port = NWEndpoint.Port(rawValue: port)!
         //let node: NWEndpoint = NWEndpoint(.v4("localhost"))
         connection = NWConnection(to: .hostPort(host: host, port: port), using: .udp)
         connection.stateUpdateHandler = { (newState) in

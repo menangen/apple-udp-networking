@@ -4,17 +4,16 @@ import socket
 from network import Network
 
 class UDPServer:
-    UDP_IP = "192.168.1.5"
+    UDP_IP = "0.0.0.0"
     UDP_PORT = 5000
 
     def __init__(self, ip: str = UDP_IP, port: int = UDP_PORT):
+
         self.udpSocket = socket.socket(
             socket.AF_INET,     # Internet
             socket.SOCK_DGRAM)  # UDP
+
         self.udpSocket.bind((ip, port))
-
-        Network.DEBUG_PACKET = True
-
         print("Serving on", ip, port)
 
         self.counterPacket = 0
@@ -60,4 +59,6 @@ class UDPServer:
 
         Network.log_request_end()
 
-UDPServer()
+
+Network.DEBUG_PACKET = True
+UDPServer(port=54321)

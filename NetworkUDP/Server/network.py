@@ -1,8 +1,26 @@
-
+import coloredlogs, logging
+import sys
 
 class Network:
     DEBUG_PACKET = False
     DEBUG_SAVE = False
+
+    Logger = logging.getLogger(__name__)
+    coloredlogs.install(
+        level='DEBUG',
+        logger=Logger,
+        stream=sys.stdout,
+        isatty=True,
+        datefmt='%H:%M:%S %d %B',
+        fmt="[%(levelname)s] %(message)s \t |%(asctime)s",
+        field_styles={
+            'asctime': {'color': 'yellow'},
+            'hostname': {'color': 'magenta'},
+            'levelname': {'color': 'black', 'bold': True},
+            'name': {'color': 'blue'},
+            'programname': {'color': 'cyan'}
+        }
+    )
 
     @classmethod
     def log(cls, *args):
@@ -28,12 +46,12 @@ class Network:
 
     @classmethod
     def log_sending_integer(cls, number: int, ip: str):
-        cls.log("Sending Data = {0}... to {1}".format(number, ip))
+        cls.Logger.debug("Sending Data = {0}... to {1}".format(number, ip))
 
     @classmethod
     def log_receiving_integer(cls, data: bytearray, addr: tuple):
         cls.log("_________________")
-        cls.log("Received message:", data, "from", addr)
+        cls.Logger.debug(f"Received message: {data}, from {addr}")
 
     @classmethod
     def log_request_end(cls):
@@ -43,7 +61,8 @@ class Network:
     def save_packet_id(cls, packet_id, normal = False):
         cls.DEBUG_SAVE = True
 
-        template = "\t..oo00\t[ Saving #{} ]\t00oo.." if normal else "\t!!!\t[ ErrorSaving #{} ]\t!!!"
+        template = "[ Saving #{} ]" if normal else "[ (!!) ErrorSaving #{} ]"
 
         record = template.format(packet_id)
-        cls.log(record)
+        tabs_tmpl = "\t\t"
+        cls.log(tabs_tmpl + record)
