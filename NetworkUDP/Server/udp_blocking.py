@@ -1,7 +1,8 @@
 import socket
+from network import Network
+from log import Log
 # from time import sleep
 
-from network import Network
 
 class UDPServer:
     UDP_IP = "0.0.0.0"
@@ -21,7 +22,7 @@ class UDPServer:
         while True:
             try:
                 data, addr = self.udpSocket.recvfrom(1024)  # buffer size is 1024 bytes
-                Network.log_receiving_integer(data, addr)
+                Log.receiving_integer(data, addr)
 
                 self.process(data, addr)
 
@@ -29,35 +30,33 @@ class UDPServer:
                 print("\tClosed by an Interrupt")
                 break
 
-
     def process(self, data: bytes, from_addr):
 
-        Network.log_variable("Processing data", data)
-        Network.log_variable("counterPacket", self.counterPacket)
-
+        Log.variable("Processing data", data)
+        Log.variable("counterPacket", self.counterPacket)
 
         if data != b"getLast":
             # TODO save to log
             incoming_number = Network.bytes_to_int(data)
 
-            Network.log_level_1("incoming_number", incoming_number)
+            Log.udp_content("incoming_number", incoming_number)
 
             if incoming_number:
 
-                Network.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
+                Log.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
 
             self.counterPacket += 1
 
         # sleep(0.05)  # 50 ms sleep
 
-        Network.log_sending_integer(self.counterPacket, from_addr[0])
+        Log.sending_integer(self.counterPacket, from_addr[0])
 
         self.udpSocket.sendto(
             Network.int_to_bytes(self.counterPacket),
             from_addr
         )
 
-        Network.log_request_end()
+        Log.request_end()
 
 
 Network.DEBUG_PACKET = True
