@@ -33,10 +33,9 @@ class UDPServer:
     def process(self, data: bytes, from_addr):
 
         Log.variable("Processing data", data)
-        Log.variable("counterPacket", self.counterPacket)
+        Log.variable("counterPacket", self.counterPacket, level=1)
 
         if data != b"getLast":
-            # TODO save to log
             incoming_number = Network.bytes_to_int(data)
 
             Log.udp_content("incoming_number", incoming_number)
@@ -59,5 +58,4 @@ class UDPServer:
         Log.request_end()
 
 
-Network.DEBUG_PACKET = True
 UDPServer(port=54321)

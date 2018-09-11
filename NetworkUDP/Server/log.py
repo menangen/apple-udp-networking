@@ -2,22 +2,20 @@ import coloredlogs
 import logging
 import verboselogs
 import sys
+import argparse
 
 
 class Log:
-    DEBUG_PACKET = False
-    DEBUG_SAVE = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', nargs='?', type=str)
+    parser.add_argument(
+        "--debug", help="enable debug messages to file", action="store_true")
+    args = parser.parse_args()
 
-    verboselogs.install()
-    logging.basicConfig(
-        format='%(levelname)s:    %(message)s',
-        filename='/Volumes/RAMDisk/udp.log',
-        level=logging.DEBUG
-    )
-    Logger = logging.getLogger(__name__)
+    Logger = verboselogs.VerboseLogger(__name__)
 
     coloredlogs.install(
-        level='DEBUG',
+        level=logging.DEBUG,
         logger=Logger,
         stream=sys.stdout,
         isatty=True,
@@ -37,23 +35,25 @@ class Log:
         }
     )
 
-    @classmethod
-    def log(cls, *args):
-        if cls.DEBUG_PACKET or cls.DEBUG_SAVE:
-            print(*args)
-            cls.DEBUG_SAVE = False
+    log_to_file = logging.FileHandler(filename=args.file or '/Volumes/RAMDisk/udp.log')
+    log_to_file.setLevel(logging.DEBUG if args.debug else logging.INFO)
+    log_to_file.setFormatter(
+        logging.Formatter(
+            fmt='%(asctime)s %(levelname)s:    %(message)s',
+            datefmt='%H:%M:%S')
+    )
+    Logger.addHandler(log_to_file)
 
     @classmethod
     def udp_content(cls, name, content):
-        cls.Logger.success(f"{name}: {content}")
+        cls.Logger.debug(f"\t({content})\t >>\t{name}")
 
     @classmethod
     def variable(cls, template: str, object_to_log, level=0):
-        cls.Logger.verbose(
-            f"\t({object_to_log})\t >>\t{template}"
-            if level else
-            f"{template} = {object_to_log}"
-        )
+        if level:
+            cls.Logger.info(f"{template} = {object_to_log}")
+        else:
+            cls.Logger.verbose(f"{template} = {object_to_log}")
 
     @classmethod
     def sending_integer(cls, number: int, ip: str):
@@ -61,7 +61,7 @@ class Log:
 
     @classmethod
     def receiving_integer(cls, data: bytearray, addr: tuple):
-        cls.Logger.verbose("_________________")
+        # cls.Logger.verbose("_________________")
         cls.Logger.debug(f"Received message: {data}, from {addr}")
 
     @classmethod
@@ -70,8 +70,7 @@ class Log:
 
     @classmethod
     def save_packet_id(cls, packet_id, normal=False):
-        tabs_tmpl = "\t\t"
         if normal:
-            cls.Logger.success(f"{tabs_tmpl}[ Saving #{packet_id} ]")
+            cls.Logger.success(f"[ Saving #{packet_id} ]")
         else:
-            cls.Logger.critical(f"[ (!!) ErrorSaving #{packet_id} ]")
+            cls.Logger.error(f"[Error Saving #{packet_id} ]")
