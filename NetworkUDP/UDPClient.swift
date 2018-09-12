@@ -10,21 +10,29 @@ import Foundation
 import Network
 
 class Measure {
-    let startTime: CFAbsoluteTime
+    var startTime: CFAbsoluteTime
     
     init() {
+        self.startTime = 0
+    }
+    
+    func start() {
         self.startTime = CFAbsoluteTimeGetCurrent()
     }
     
     func end() {
+        func trunc(_ value: CFAbsoluteTime) -> Float {
+            return Float(floor(100 * value) / 100)
+        }
+        
         let delay = CFAbsoluteTimeGetCurrent() - startTime
         let ms = delay * 1000
         
         if delay < 1.0 {
-            print("Delay \(ms) ms")
+            print("Delay \(trunc(ms)) ms")
         }
         else {
-            print("Delay \(delay) sec")
+            print("Delay \(trunc(delay)) sec")
         }
     }
 }
@@ -32,12 +40,13 @@ class Measure {
 class UDPClient {
     var connection: NWConnection
     var queue: DispatchQueue
+    let measure = Measure()
     
     init(_ ip: String, _ port: UInt16 = 5000) {
         queue = DispatchQueue(label: "UDP Client Queue")
 
-        //let host = NWEndpoint.Host("novikova.us")
-        let host = NWEndpoint.Host.ipv4(IPv4Address(ip)!)
+        let host = NWEndpoint.Host("novikova.us")
+        //let host = NWEndpoint.Host.ipv4(IPv4Address(ip)!)
         let port = NWEndpoint.Port(rawValue: port)!
         
         connection = NWConnection(to: .hostPort(host: host, port: port), using: .udp)
@@ -76,7 +85,7 @@ class UDPClient {
         }
         
         print("Sending", data!, "UInt (\(packetCounter))")
-        let measure = Measure()
+        self.measure.start()
         
         connection.send(content: data, completion: .contentProcessed({
                 (error) in
@@ -93,7 +102,7 @@ class UDPClient {
                 
                 updateCounterWithData(data!)
                 
-                measure.end()
+                self.measure.end()
                 print()
             }
         })

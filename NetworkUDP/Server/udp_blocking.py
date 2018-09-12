@@ -1,8 +1,8 @@
 import socket
 from network import Network
 from log import Log
-# from time import sleep
-
+from binascii import hexlify as tohex
+from time import sleep
 
 class UDPServer:
     UDP_IP = "0.0.0.0"
@@ -21,8 +21,8 @@ class UDPServer:
 
         while True:
             try:
-                data, addr = self.udpSocket.recvfrom(1024)  # buffer size is 1024 bytes
-                Log.receiving_integer(data, addr)
+                data, addr = self.udpSocket.recvfrom(16)  # buffer size is 1024 bytes
+                Log.receiving_bytes(data, addr)
 
                 self.process(data, addr)
 
@@ -32,10 +32,10 @@ class UDPServer:
 
     def process(self, data: bytes, from_addr):
 
-        Log.variable("Processing data", data)
         Log.variable("counterPacket", self.counterPacket, level=1)
 
         if data != b"getLast":
+            Log.variable("Processing data", tohex(data).upper())
             incoming_number = Network.bytes_to_int(data)
 
             Log.udp_content("incoming_number", incoming_number)
@@ -45,8 +45,8 @@ class UDPServer:
                 Log.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
 
             self.counterPacket += 1
-
-        # sleep(0.05)  # 50 ms sleep
+        else:
+            Log.notice("Processing [ getLast ] message")
 
         Log.sending_integer(self.counterPacket, from_addr[0])
 
