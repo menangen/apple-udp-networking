@@ -20,7 +20,7 @@ class Measure {
         self.startTime = CFAbsoluteTimeGetCurrent()
     }
     
-    func end() {
+    func end(_ log: (String) -> Void) {
         func trunc(_ value: CFAbsoluteTime) -> Float {
             return Float(floor(100 * value) / 100)
         }
@@ -29,10 +29,10 @@ class Measure {
         let ms = delay * 1000
         
         if delay < 1.0 {
-            print("Delay \(trunc(ms)) ms")
+            log("Delay \(trunc(ms)) ms")
         }
         else {
-            print("Delay \(trunc(delay)) sec")
+            log("Delay \(trunc(delay)) sec")
         }
     }
 }
@@ -63,12 +63,13 @@ class UDPClient {
         connection.start(queue: queue)
     }
     
-    func send(_ packetCounter: inout UInt16) {
-        print(">>>>>>>>>")
+    func send(_ packetCounter: inout UInt16, log: @escaping (String) -> Void, scroll: () -> Void) {
+        log(">>>>>>>>>")
         
-        func updateCounterWithData(_ data: Data) {
+        func updateCounterWithData(_ data: Data, log: (String) -> Void) {
             let number = UInt16(littleEndian: data.withUnsafeBytes { $0.pointee })
-            print("Get: UInt (\(number))")
+            
+            log("Get: UInt (\(number))")
             
             if packetCounter != number && number > 0 {
                 packetCounter = number + 1
@@ -84,28 +85,28 @@ class UDPClient {
             data = Data(bytes: &packetCounter, count: 2)
         }
         
-        print("Sending", data!, "UInt (\(packetCounter))")
+        log("Sending \(data!) | UInt (\(packetCounter))")
         self.measure.start()
         
         connection.send(content: data, completion: .contentProcessed({
                 (error) in
                 if let error = error {
-                    print("Send error: \(error)")
+                    log("Send error: \(error)")
                 }
             })
         )
         
         connection.receive(minimumIncompleteLength: 2, maximumLength: 1024, completion: {
             (data, context, isComplete, error) in
+            
             if data != nil {
-                print("Received!", data ?? "Empty content")
+                log("Received! \(data!)")
                 
-                updateCounterWithData(data!)
+                updateCounterWithData(data!, log: log)
                 
-                self.measure.end()
-                print()
+                self.measure.end(log)
             }
         })
-        print("Sent...")
+        log("Sent...")
     }
 }

@@ -10,20 +10,23 @@
 		0D07A5BE2136869200813C8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D07A5BD2136869200813C8C /* AppDelegate.swift */; };
 		0D07A5C02136869200813C8C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D07A5BF2136869200813C8C /* ViewController.swift */; };
 		0D07A5C32136869200813C8C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C12136869200813C8C /* Main.storyboard */; };
-		0D07A5C52136869300813C8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C42136869300813C8C /* Assets.xcassets */; };
 		0D07A5C82136869300813C8C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D07A5C62136869300813C8C /* LaunchScreen.storyboard */; };
 		0DFBF8A12139C481004112B9 /* UDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFBF8A02139C481004112B9 /* UDPClient.swift */; };
+		C13077F72152A29900CF943D /* uECC.c in Sources */ = {isa = PBXBuildFile; fileRef = C13077F52152A29900CF943D /* uECC.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0D07A5BA2136869200813C8C /* NetworkUDP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkUDP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D07A5BD2136869200813C8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0D07A5BF2136869200813C8C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		0D07A5C22136869200813C8C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0D07A5C42136869300813C8C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0D07A5C72136869300813C8C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0D07A5C92136869300813C8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DFBF8A02139C481004112B9 /* UDPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPClient.swift; sourceTree = "<group>"; };
+		C13077F42152A29900CF943D /* NetworkUDP-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NetworkUDP-Bridging-Header.h"; sourceTree = "<group>"; };
+		C13077F52152A29900CF943D /* uECC.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uECC.c; path = "../../../../../../Volumes/RAMDisk/micro-ecc/uECC.c"; sourceTree = "<group>"; };
+		C13077F62152A29900CF943D /* uECC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = uECC.h; path = "../../../../../../Volumes/RAMDisk/micro-ecc/uECC.h"; sourceTree = "<group>"; };
+		C1BA9C7D214974C100786342 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C1BA9C7E214974C100786342 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,8 +43,11 @@
 		0D07A5B12136869200813C8C = {
 			isa = PBXGroup;
 			children = (
+				C13077F52152A29900CF943D /* uECC.c */,
+				C13077F62152A29900CF943D /* uECC.h */,
 				0D07A5BC2136869200813C8C /* NetworkUDP */,
 				0D07A5BB2136869200813C8C /* Products */,
+				C13077F42152A29900CF943D /* NetworkUDP-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +105,7 @@
 				TargetAttributes = {
 					0D07A5B92136869200813C8C = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -108,7 +115,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
 			mainGroup = 0D07A5B12136869200813C8C;
 			productRefGroup = 0D07A5BB2136869200813C8C /* Products */;
@@ -126,7 +132,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D07A5C82136869300813C8C /* LaunchScreen.storyboard in Resources */,
-				0D07A5C52136869300813C8C /* Assets.xcassets in Resources */,
 				0D07A5C32136869200813C8C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +146,7 @@
 				0DFBF8A12139C481004112B9 /* UDPClient.swift in Sources */,
 				0D07A5C02136869200813C8C /* ViewController.swift in Sources */,
 				0D07A5BE2136869200813C8C /* AppDelegate.swift in Sources */,
+				C13077F72152A29900CF943D /* uECC.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +156,7 @@
 		0D07A5C12136869200813C8C /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0D07A5C22136869200813C8C /* Base */,
+				C1BA9C7D214974C100786342 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -158,7 +164,7 @@
 		0D07A5C62136869300813C8C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0D07A5C72136869300813C8C /* Base */,
+				C1BA9C7E214974C100786342 /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -203,7 +209,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -264,7 +270,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -286,14 +292,19 @@
 		0D07A5CD2136869300813C8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JRVE2AC4EN;
 				INFOPLIST_FILE = NetworkUDP/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = menangen.NetworkUDP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "NetworkUDP-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -302,14 +313,18 @@
 		0D07A5CE2136869300813C8C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JRVE2AC4EN;
 				INFOPLIST_FILE = NetworkUDP/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = menangen.NetworkUDP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "NetworkUDP-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

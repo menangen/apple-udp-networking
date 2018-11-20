@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     let client: UDPClient
     var packetCounter: UInt16
     
+    @IBOutlet weak var textLogArea: UITextView!
+    
     required init?(coder aDecoder: NSCoder) {
         print("init coder style")
         
@@ -26,8 +28,31 @@ class ViewController: UIViewController {
         self.view.backgroundColor = UIColor.black
     }
 
+    func addText(_ value: String) {
+        print(value)
+        
+        DispatchQueue.main.async {
+            self.textLogArea.text += value + "\n"
+        }
+    }
+    
+    func scrollView() {
+        
+        DispatchQueue.main.async {
+            let range = NSMakeRange(self.textLogArea.text.count - 1, self.textLogArea.text.count - 10)
+            self.textLogArea.scrollRangeToVisible(range)
+        }
+        print()
+    }
+    
     @IBAction func pressed() {
-        self.client.send(&self.packetCounter)
+        if self.packetCounter == 0 {
+            self.textLogArea.text = nil
+        }
+        
+        checkKeys();
+        
+        self.client.send(&self.packetCounter, log: addText, scroll: scrollView)
         
         self.packetCounter += 1
     }
