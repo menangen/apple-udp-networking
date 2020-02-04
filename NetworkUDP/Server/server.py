@@ -1,59 +1,47 @@
-import socket
+import udp
 from network import NetworkData
 from log import Log
 from binascii import hexlify as tohex
 
 
-class UDPServer:
-    UDP_IP = "0.0.0.0"
-    UDP_PORT = 5000
-    BUFFER = 16
+class Server:
+    PORT = 5000
 
-    def __init__(self, ip: str = UDP_IP, port: int = UDP_PORT):
-
-        self.udpSocket = socket.socket(
-            socket.AF_INET,     # Internet
-            socket.SOCK_DGRAM)  # UDP
-
-        self.udpSocket.bind((ip, port))
-        print("Serving on", ip, port)
-
+    def __init__(self, port: int = PORT):
+        self.socket = udp.Socket(port=port)
         self.counterPacket = 0
 
+    def process(self):
         while True:
             try:
-                data, addr = self.udpSocket.recvfrom(self.BUFFER)  # buffer size is 1024 bytes
-                Log.receiving_bytes(data, addr)
+                data, from_addr = self.socket.read()
 
-                self.process(data, addr)
+                Log.variable("counterPacket", self.counterPacket, level=1)
+
+                if data != b"getLast":
+                    Log.variable("Processing data", tohex(data).upper())
+                    incoming_number = NetworkData.to_int(data)
+
+                    Log.udp_content("incoming_number", incoming_number)
+
+                    if incoming_number:
+                        Log.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
+
+                    self.counterPacket += 1
+                else:
+                    Log.notice("Processing [ getLast ] message")
 
             except KeyboardInterrupt:
                 print("\tClosed by an Interrupt")
                 break
 
-    def process(self, data: bytes, from_addr):
+            Log.sending_integer(self.counterPacket, from_addr[0])
 
-        Log.variable("counterPacket", self.counterPacket, level=1)
+            data = NetworkData.to_bytes(2, self.counterPacket)
+            self.socket.send(data, from_addr)
 
-        if data != b"getLast":
-            Log.variable("Processing data", tohex(data).upper())
-            incoming_number = NetworkData.to_int(data)
+            Log.request_end()
 
-            Log.udp_content("incoming_number", incoming_number)
 
-            if incoming_number:
-
-                Log.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
-
-            self.counterPacket += 1
-        else:
-            Log.notice("Processing [ getLast ] message")
-
-        Log.sending_integer(self.counterPacket, from_addr[0])
-
-        self.udpSocket.sendto(
-            NetworkData.to_bytes(self.counterPacket),
-            from_addr
-        )
-
-        Log.request_end()
+s = Server()
+s.process()
