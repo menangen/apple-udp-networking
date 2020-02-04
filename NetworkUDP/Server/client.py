@@ -1,5 +1,5 @@
 import udp
-from network import NetworkData
+from proto import Protocol
 
 
 class Client:
@@ -10,7 +10,8 @@ class Client:
         self.counterPacket = 0
 
     def send(self, address):
-        data = NetworkData.to_bytes(1, self.counterPacket)
+        data = Protocol.for_string(r"HI")
+
         self.socket.send(data, address)
         self.counterPacket += 1
 

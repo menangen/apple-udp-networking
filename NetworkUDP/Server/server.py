@@ -1,5 +1,5 @@
 import udp
-from network import NetworkData
+from proto import Protocol
 from log import Log
 from binascii import hexlify as tohex
 
@@ -20,14 +20,7 @@ class Server:
 
                 if data != b"getLast":
                     Log.variable("Processing data", tohex(data).upper())
-                    incoming_number = NetworkData.to_int(data)
 
-                    Log.udp_content("incoming_number", incoming_number)
-
-                    if incoming_number:
-                        Log.save_packet_id(incoming_number, self.counterPacket + 1 == incoming_number)
-
-                    self.counterPacket += 1
                 else:
                     Log.notice("Processing [ getLast ] message")
 
@@ -37,7 +30,7 @@ class Server:
 
             Log.sending_integer(self.counterPacket, from_addr[0])
 
-            data = NetworkData.to_bytes(2, self.counterPacket)
+            data = Protocol.for_integer(self.counterPacket)
             self.socket.send(data, from_addr)
 
             Log.request_end()
