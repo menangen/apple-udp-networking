@@ -2,14 +2,18 @@ from network import NetworkData
 
 
 class Protocol:
-    VERSION = 1
 
-    @classmethod
-    def for_string(cls, text: str):
-        data = bytes([cls.VERSION])
+    def __init__(self, version: int = 1):
+        self.VERSION = version
 
-        return data + text.encode()
+    def get_header(self, data_length: int):
+        return bytes([self.VERSION, data_length])
 
-    @classmethod
-    def for_integer(cls, var: int, size: int = 1):
-        return NetworkData.to_bytes(size, var)
+    def for_string(self, text: str):
+        header_data = self.get_header(len(text))
+
+        return header_data + text.encode()
+
+    def for_integer(self, var: int, size: int = 1):
+        header_data = self.get_header(size)
+        return header_data + NetworkData.to_bytes(size, var)

@@ -28,10 +28,10 @@ class Server:
                 print("\tClosed by an Interrupt")
                 break
 
-            Log.sending_integer(self.counterPacket, from_addr[0])
+            # Log.sending_integer(self.counterPacket, from_addr[0])
 
-            data = Protocol.for_integer(self.counterPacket)
-            self.socket.send(data, from_addr)
+            # data = Protocol.for_integer(self.counterPacket)
+            # self.socket.send(data, from_addr)
 
             Log.request_end()
 

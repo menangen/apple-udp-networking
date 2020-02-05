@@ -1,3 +1,4 @@
+from log import Log
 import udp
 from proto import Protocol
 
@@ -8,11 +9,15 @@ class Client:
     def __init__(self, port: int = PORT):
         self.socket = udp.Socket(port=port)
         self.counterPacket = 0
+        self.protocol = Protocol()
 
     def send(self, address):
-        data = Protocol.for_string(r"HI")
+        data = self.protocol.for_string(r"HI")
 
         self.socket.send(data, address)
+
+        Log.variable("Sent UDP", list(data))
+
         self.counterPacket += 1
 
 

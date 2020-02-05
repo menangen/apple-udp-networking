@@ -22,7 +22,7 @@ class Log:
         isatty=True,
         datefmt='%H:%M:%S %d %B',
         level_styles={
-            'critical': {'color': 'red', 'bold': True}, 'debug': {'color': 'blue'},
+            'critical': {'color': 'red', 'bold': True}, 'debug': {'color': 'green'},
             'error': {'color': 'red'}, 'info': {}, 'notice': {'color': 'magenta'},
             'spam': {'color': 'green', 'faint': True}, 'success': {'color': 'green', 'bold': True},
             'verbose': {'color': 'white'}, 'warning': {'color': 'yellow'}},
@@ -39,7 +39,6 @@ class Log:
     default_log_file = '/Volumes/RAMDisk/socket.log' if platform.system() == 'Darwin' else "socket.log"
     current_file_log = args.file or default_log_file
 
-    Logger.verbose(f"Logging to {current_file_log}")
     log_to_file = logging.FileHandler(filename=current_file_log)
     log_to_file.setLevel(logging.DEBUG if args.debug else logging.INFO)
     log_to_file.setFormatter(
@@ -47,7 +46,8 @@ class Log:
             fmt='%(asctime)s %(levelname)s:    %(message)s',
             datefmt='%H:%M:%S')
     )
-    Logger.addHandler(log_to_file)
+    # Logger.addHandler(log_to_file)
+    # Logger.verbose(f"Logging to {current_file_log}")
 
     @classmethod
     def notice(cls, template: str):
@@ -70,7 +70,7 @@ class Log:
 
     @classmethod
     def receiving_bytes(cls, data: bytes, addr: tuple):
-        cls.Logger.debug(f"Received message: {list(data)}, from {addr}")
+        cls.Logger.debug(f"Received UDP data: {list(data)}, from {addr}")
 
     @classmethod
     def request_end(cls):
