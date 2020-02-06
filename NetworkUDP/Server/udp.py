@@ -14,7 +14,7 @@ class Socket:
             socket.SOCK_DGRAM)  # UDP
 
         self.udpSocket.bind((ip, port))
-        print("UDP on", ip, port)
+        Log.notice(f"Binding UDP socket on {port}")
 
     def read(self):
         data, addr = self.udpSocket.recvfrom(self.BUFFER)  # buffer size is 1024 bytes

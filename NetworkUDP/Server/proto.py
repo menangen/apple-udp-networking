@@ -5,8 +5,15 @@ class Protocol:
 
     def __init__(self, version: int = 1):
         self.VERSION = version
-        self.CHUNK = 1
-        self.CHUNKS_NUMBER = 1
+        self.CHUNK = 0
+        self.CHUNKS_NUMBER = 0
+
+    @staticmethod
+    def compute_chunks(size: int):
+        full_chunks = size >> 9
+        partial_chunk = size & 511
+
+        return full_chunks, partial_chunk
 
     @staticmethod
     def get_chunk_id(current: int = 0, total: int = 0):

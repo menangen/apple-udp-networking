@@ -1,5 +1,5 @@
 import udp
-from proto import Protocol
+from json import loads
 from log import Log
 from binascii import hexlify as tohex
 
@@ -20,6 +20,12 @@ class Server:
 
                 if data != b"getLast":
                     Log.variable("Processing data", tohex(data).upper())
+
+                    j_data = data[3:]
+                    j_str = j_data.decode('ascii')
+
+                    obj = loads(j_str)
+                    Log.notice(obj)
 
                 else:
                     Log.notice("Processing [ getLast ] message")

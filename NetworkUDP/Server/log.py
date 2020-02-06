@@ -20,10 +20,10 @@ class Log:
         logger=Logger,
         stream=sys.stdout,
         isatty=True,
-        datefmt='%H:%M:%S %d %B',
+        datefmt='%H:%M:%S',
         level_styles={
             'critical': {'color': 'red', 'bold': True}, 'debug': {'color': 'green'},
-            'error': {'color': 'red'}, 'info': {}, 'notice': {'color': 'magenta'},
+            'error': {'color': 'red'}, 'info': {}, 'notice': {'color': 'red'},
             'spam': {'color': 'green', 'faint': True}, 'success': {'color': 'green', 'bold': True},
             'verbose': {'color': 'white'}, 'warning': {'color': 'yellow'}},
         fmt="%(asctime)s[%(levelname)s] %(message)s \t",
@@ -39,13 +39,13 @@ class Log:
     default_log_file = '/Volumes/RAMDisk/socket.log' if platform.system() == 'Darwin' else "socket.log"
     current_file_log = args.file or default_log_file
 
-    log_to_file = logging.FileHandler(filename=current_file_log)
-    log_to_file.setLevel(logging.DEBUG if args.debug else logging.INFO)
-    log_to_file.setFormatter(
-        logging.Formatter(
-            fmt='%(asctime)s %(levelname)s:    %(message)s',
-            datefmt='%H:%M:%S')
-    )
+    # log_to_file = logging.FileHandler(filename=current_file_log)
+    # log_to_file.setLevel(logging.DEBUG if args.debug else logging.INFO)
+    # log_to_file.setFormatter(
+    #     logging.Formatter(
+    #         fmt='%(asctime)s %(levelname)s:    %(message)s',
+    #         datefmt='%H:%M:%S')
+    # )
     # Logger.addHandler(log_to_file)
     # Logger.verbose(f"Logging to {current_file_log}")
 
