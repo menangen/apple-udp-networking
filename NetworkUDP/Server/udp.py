@@ -1,6 +1,8 @@
 import socket
 from log import Log
 
+from typing import Tuple
+
 
 class Socket:
     UDP_IP = "0.0.0.0"
@@ -22,5 +24,6 @@ class Socket:
 
         return data, addr
 
-    def send(self, data: bytes, address):
+    def send(self, data: bytes, address: Tuple):
+        Log.notice(f"Sending {len(data)} bytes to {address[0]}")
         self.udpSocket.sendto(data, address)

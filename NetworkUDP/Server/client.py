@@ -1,5 +1,4 @@
 from log import Log
-import udp
 from proto import Protocol
 from json import dumps
 
@@ -8,9 +7,7 @@ class Client:
     PORT = 3000
 
     def __init__(self, port: int = PORT):
-        self.socket = udp.Socket(port=port)
-        self.counterPacket = 0
-        self.protocol = Protocol()
+        self.protocol = Protocol(port)
 
     def send(self, address):
         json_string = dumps(
@@ -24,11 +21,8 @@ class Client:
 
         Log.variable("json_data", json_string)
 
-        data = self.protocol.for_string(json_string)
-        self.socket.send(data, address)
-
-        Log.variable("Sent UDP", list(data), level=1)
-        self.counterPacket += 1
+        self.protocol.set_destination(address)
+        self.protocol.send_string(json_string)
 
 
 c = Client()
