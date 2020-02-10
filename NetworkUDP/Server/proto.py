@@ -7,44 +7,38 @@ import udp
 class Protocol:
     dest: Tuple = (None, None)
 
-    def __init__(self, port: int = 5000, version: int = 1):
+    class Header:
+        def __init__(self, data: bytes):
+            self.data = data
+
+            self.VERSION: int = 1
+            self.CHUNK = 0
+            self.TOTAL_CHUNKS = 0
+
+            self.chunk_id = NetworkData.get_chunk_id(self.CHUNK, self.TOTAL_CHUNKS)
+
+        def __add__(self, content_bytes: bytes):
+            return bytes([self.VERSION, self.chunk_id, len(self.data)]) + content_bytes
+
+    def __init__(self, port: int = 5000):
         self.socket = udp.Socket(port=port)
         self.counterPacket = 0
-
-        self.VERSION = version - 1
-        self.CHUNK = 0
-        self.TOTAL_CHUNKS = 0
-
-    @staticmethod
-    def compute_chunks(size: int):
-        full_chunks = size >> 9
-        partial_chunk = size & 511
-
-        return full_chunks, partial_chunk
-
-    @staticmethod
-    def get_chunk_id(current: int = 0, total: int = 0):
-        return current << 4 | total
-
-    def get_header(self, data_length: int):
-        chunk_id = self.get_chunk_id(self.CHUNK, self.TOTAL_CHUNKS)
-
-        return bytes([self.VERSION, chunk_id, data_length])
 
     def encode(self, var: str or int):
 
         if isinstance(var, str):
-            Log.notice("String encoding")
+            Log.success("String encoding")
             data = var.encode()
 
         elif isinstance(var, int):
-            Log.notice("Int encoding")
+            Log.success("Int encoding")
             data = NetworkData.to_bytes(1, var)
 
         else:
+            Log.notice("Error at encoding")
             raise ValueError
 
-        header_data = self.get_header(len(data))
+        header_data = self.Header(data)
 
         return header_data + data
 

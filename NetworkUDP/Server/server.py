@@ -16,7 +16,7 @@ class Server:
             try:
                 data, from_addr = self.socket.read()
 
-                Log.variable("counterPacket", self.counterPacket, level=1)
+                # Log.variable("counterPacket", self.counterPacket, level=1)
 
                 if data != b"getLast":
                     Log.variable("Processing data", tohex(data).upper())

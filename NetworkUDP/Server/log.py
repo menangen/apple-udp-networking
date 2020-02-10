@@ -54,6 +54,10 @@ class Log:
         cls.Logger.notice(template)
 
     @classmethod
+    def success(cls, template: str):
+        cls.Logger.success(template)
+
+    @classmethod
     def udp_content(cls, name, content):
         cls.Logger.debug(f"\t({content})\t >>\t{name}")
 
