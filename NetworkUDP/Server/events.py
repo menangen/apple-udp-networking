@@ -1,3 +1,4 @@
+import json
 from log import Log
 
 
@@ -12,6 +13,19 @@ class Position:
         data = self.x << 16 | self.y
 
         return data.to_bytes(4, byteorder="big", signed=False)
+
+    @classmethod
+    def decode(cls, coords_packed: bytes):
+        x_packed = coords_packed[0:2]
+        y_packed = coords_packed[2:4]
+
+        x_unpacked = int.from_bytes(x_packed, byteorder="big", signed=False)
+        y_unpacked = int.from_bytes(y_packed, byteorder="big", signed=False)
+
+        return cls(x_unpacked, y_unpacked)
+
+    def __str__(self):
+        return f"<Position({self.x}, {self.y})>"
 
 
 class Event:
@@ -28,14 +42,12 @@ class Event:
 
         return packet_id.to_bytes(1, byteorder="big", signed=False)
 
-    @staticmethod
-    def decode(data: bytes):
-        packet_type = data[0]
-        packet_data = data[1:]
+    @classmethod
+    def decode(cls, data: bytes):
 
-        Log.udp_content("Event data", packet_data)
+        Log.udp_content("Event data", list(data))
 
-        return packet_data
+        return data
 
 
 class Hello(Event):
@@ -43,19 +55,35 @@ class Hello(Event):
         super().__init__()
 
         self.ask = True
-        self.content = message.encode()
+        self.message = message
 
     def serialize(self):
         packet_type = super().serialize()
 
-        Log.udp_content("Packet type", list(packet_type))
-        Log.udp_content("Content", list(self.content))
+        content = self.message.encode()
 
-        data = packet_type + self.content
+        Log.udp_content("Packet type", list(packet_type))
+        Log.udp_content("Content", list(content))
+
+        data = packet_type + content
 
         Log.notice(f"Length: {len(data)}")
 
         return data
+
+    @classmethod
+    def decode(cls, data: bytes):
+        json_str = data.decode('ascii')
+
+        Log.notice("Hello event decoded")
+
+        try:
+            obj = json.loads(json_str)
+            Log.notice(obj)
+        except AttributeError:
+            Log.notice("Error decoding JSON")
+
+        return cls(json_str)
 
 
 class Movement(Event):
@@ -66,20 +94,38 @@ class Movement(Event):
 
         self.ask = True
 
-        self.from_position = from_point.serialize()
-        self.to_position = to_point.serialize()
+        self.from_point = from_point
+        self.to_point = to_point
 
     def serialize(self):
         packet_type = super().serialize()
 
+        from_position = self.from_point.serialize()
+        to_position = self.to_point.serialize()
+
         Log.udp_content("Packet type", list(packet_type))
+        Log.udp_content("From", list(from_position))
+        Log.udp_content("To", list(to_position))
 
-        Log.udp_content("From", list(self.from_position))
-        Log.udp_content("To", list(self.to_position))
-
-        data = packet_type + self.from_position + self.to_position
+        data = packet_type + from_position + to_position
 
         return data
 
+    @classmethod
+    def decode(cls, data: bytes):
+        from_point_bytes = data[0:4]
+        to_point_bytes = data[4:8]
 
-ALL = [Movement, Hello]
+        Log.udp_content("From", list(from_point_bytes))
+        Log.udp_content("To",   list(to_point_bytes))
+
+        from_position = Position.decode(from_point_bytes)
+        to_position = Position.decode(to_point_bytes)
+
+        return cls(from_position, to_position)
+
+    def __str__(self):
+        return f"<events.Movement [{self.from_point}] -> [{self.to_point}] >"
+
+
+events = [Movement, Hello]

@@ -1,5 +1,4 @@
 from binascii import hexlify as tohex
-from json import loads
 
 from log import Log
 import udp
@@ -32,17 +31,11 @@ class Server:
 
                     Log.variable("Event id", event_id)
 
-                    for e in events.ALL:
+                    for e in events.events:
                         if event_id == e.id:
-                            event_content = e.decode(packet_data)
+                            event = e.decode(packet_data[1:])
 
-                            if event_id == 0:
-                                Log.notice("Hello event")
-
-                                json_str = event_content.decode('ascii')
-
-                                obj = loads(json_str)
-                                Log.notice(obj)
+                            Log.notice(event)
 
                 else:
                     Log.notice("Processing random [ udp ] packet")
