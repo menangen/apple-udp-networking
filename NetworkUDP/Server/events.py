@@ -1,3 +1,6 @@
+from log import Log
+
+
 class Position:
     def __init__(self, x: int = 0, y: int = 0):
         self.x = x
@@ -15,7 +18,7 @@ class Event:
     id = 0
     ask = False
 
-    def __init__(self, identificator: int):
+    def __init__(self, identificator: int = 0):
         self.id = identificator
 
     def serialize(self):
@@ -24,6 +27,35 @@ class Event:
         packet_id = _flag | self.id
 
         return packet_id.to_bytes(1, byteorder="big", signed=False)
+
+    @staticmethod
+    def decode(data: bytes):
+        packet_type = data[0]
+        packet_data = data[1:]
+
+        Log.udp_content("Event data", packet_data)
+
+        return packet_data
+
+
+class Hello(Event):
+    def __init__(self, message: str):
+        super().__init__()
+
+        self.ask = True
+        self.content = message.encode()
+
+    def serialize(self):
+        packet_type = super().serialize()
+
+        Log.udp_content("Packet type", list(packet_type))
+        Log.udp_content("Content", list(self.content))
+
+        data = packet_type + self.content
+
+        Log.notice(f"Length: {len(data)}")
+
+        return data
 
 
 class Movement(Event):
@@ -34,18 +66,20 @@ class Movement(Event):
 
         self.ask = True
 
-        self._from = from_point
-        self._to = to_point
+        self.from_position = from_point.serialize()
+        self.to_position = to_point.serialize()
 
     def serialize(self):
         packet_type = super().serialize()
 
-        print("Packet type:", list(packet_type))
+        Log.udp_content("Packet type", list(packet_type))
 
-        from_position = self._from.serialize()
-        to_position = self._to.serialize()
+        Log.udp_content("From", list(self.from_position))
+        Log.udp_content("To", list(self.to_position))
 
-        print("From:", list(from_position))
-        print("To:", list(to_position))
+        data = packet_type + self.from_position + self.to_position
 
-        return packet_type + from_position + to_position
+        return data
+
+
+ALL = [Movement, Hello]

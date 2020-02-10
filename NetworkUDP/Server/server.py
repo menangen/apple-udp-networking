@@ -1,7 +1,9 @@
-import udp
-from json import loads
-from log import Log
 from binascii import hexlify as tohex
+from json import loads
+
+from log import Log
+import udp
+import events
 
 
 class Server:
@@ -18,17 +20,32 @@ class Server:
 
                 # Log.variable("counterPacket", self.counterPacket, level=1)
 
-                if data != b"getLast":
+                if data[0:2] == bytes([1, 0]):
                     Log.variable("Processing data", tohex(data).upper())
 
-                    j_data = data[3:]
-                    j_str = j_data.decode('ascii')
+                    packet_data = data[3:]
+                    packet_type = packet_data[0]
 
-                    obj = loads(j_str)
-                    Log.notice(obj)
+                    Log.variable("Packet type", packet_type)
+
+                    event_id = packet_type & 127
+
+                    Log.variable("Event id", event_id)
+
+                    for e in events.ALL:
+                        if event_id == e.id:
+                            event_content = e.decode(packet_data)
+
+                            if event_id == 0:
+                                Log.notice("Hello event")
+
+                                json_str = event_content.decode('ascii')
+
+                                obj = loads(json_str)
+                                Log.notice(obj)
 
                 else:
-                    Log.notice("Processing [ getLast ] message")
+                    Log.notice("Processing random [ udp ] packet")
 
             except KeyboardInterrupt:
                 print("\tClosed by an Interrupt")

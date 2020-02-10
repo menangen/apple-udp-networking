@@ -59,7 +59,7 @@ class Log:
 
     @classmethod
     def udp_content(cls, name, content):
-        cls.Logger.debug(f"\t({content})\t >>\t{name}")
+        cls.Logger.debug(f"\t{name}\t>>\t{content}")
 
     @classmethod
     def variable(cls, template: str, object_to_log, level=0):

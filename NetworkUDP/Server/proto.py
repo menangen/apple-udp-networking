@@ -3,6 +3,8 @@ from log import Log
 from network import NetworkData
 import udp
 
+from events import Event
+
 
 class Protocol:
     dest: Tuple = (None, None)
@@ -24,7 +26,7 @@ class Protocol:
         self.socket = udp.Socket(port=port)
         self.counterPacket = 0
 
-    def encode(self, var: str or int):
+    def encode(self, var: str or int or Event):
 
         if isinstance(var, str):
             Log.success("String encoding")
@@ -33,6 +35,10 @@ class Protocol:
         elif isinstance(var, int):
             Log.success("Int encoding")
             data = NetworkData.to_bytes(1, var)
+
+        elif isinstance(var, Event):
+            Log.success("Event encoding")
+            data = var.serialize()
 
         else:
             Log.notice("Error at encoding")
@@ -45,8 +51,8 @@ class Protocol:
     def set_destination(self, address_and_port):
         self.dest = address_and_port
 
-    def send_string(self, string_data):
-        data = self.encode(string_data)
+    def send(self, var):
+        data = self.encode(var)
         self.socket.send(data, self.dest)
 
         Log.variable("Sent UDP bytes", list(data), level=1)
