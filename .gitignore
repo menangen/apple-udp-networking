@@ -1,2 +1,8 @@
 NetworkUDP.xcodeproj/xcuserdata
 *.pyc
+*.cfg
+NetworkUDP/Server/.idea
+NetworkUDP/Server/bin
+NetworkUDP/Server/lib
+DerivedData
+NetworkUDP.xcodeproj/project.xcworkspace
