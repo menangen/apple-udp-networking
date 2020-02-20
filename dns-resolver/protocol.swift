@@ -35,12 +35,16 @@ class UDPProto {
         let header = Header(udpPacket)
         
         if header.VERSION == 0 {
-            let eventData = [UInt8](udpPacket[3...])
+            let eventData = udpPacket[4...]
             
-            let eventType = eventData[0]
+            let eventType = udpPacket[3]
             let eventID   = eventType & 127
             
             print("Event ID: \(eventID)")
+            
+            let decoded = Movement.decode(data: eventData)
+            
+            print(decoded)
         }
         
         else { print("Other UDP protocol") }
