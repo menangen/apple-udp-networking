@@ -4,3 +4,5 @@ NetworkUDP.xcodeproj/xcuserdata
 NetworkUDP/Server/.idea
 NetworkUDP/Server/bin
 NetworkUDP/Server/lib
+DerivedData
+NetworkUDP.xcodeproj/project.xcworkspace
