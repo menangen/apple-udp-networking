@@ -10,7 +10,7 @@ class Protocol:
     dest: Tuple = (None, None)
 
     class Header:
-        VERSION: int = 1
+        VERSION: int = 0
 
         def __init__(self, data: bytes):
             self.data = data
