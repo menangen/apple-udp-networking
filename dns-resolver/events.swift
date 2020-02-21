@@ -29,8 +29,8 @@ struct Position {
     }
 }
 
-class Movement: CustomStringConvertible {
-    let id: UInt8 = 1
+class Movement: Event, CustomStringConvertible {
+    static var id: UInt8 = 1
     let ask = true
     
     let from, to: Position
@@ -42,7 +42,7 @@ class Movement: CustomStringConvertible {
     }
     
     static
-    func decode(data: Data) -> Movement {
+    func decode(data: Data) -> Event {
         print("decoding Movement in:", [UInt8](data))
         
         let fromPacked = data[4...7]
@@ -51,10 +51,17 @@ class Movement: CustomStringConvertible {
         let fromPosition = Position.decode(coordsPacked: fromPacked)
         let toPosition   = Position.decode(coordsPacked: toPacked)
         
-        return Movement(from: fromPosition, to: toPosition)
+        return Movement(from: fromPosition, to: toPosition) as Event
     }
     
     var description: String {
         return "Movement[ from: \(self.from), to: \(self.to)]"
     }
 }
+
+protocol Event {
+    static var  id: UInt8 { get }
+    static func decode(data: Data) -> Event
+}
+
+let Events: [Event.Type] = [Movement.self]
